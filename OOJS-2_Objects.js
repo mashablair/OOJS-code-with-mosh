@@ -83,30 +83,42 @@ console.log((square.defaultLocation = 1)); // --> should be an error...
 
 // Exercise
 function Stopwatch() {
-  this.duration = 0;
-  const myTimer = setInterval(this.start, 1000);
+  let duration = 0;
+  let isRunning = false;
+  let myTimer;
 
   this.start = function() {
+    if (isRunning) {
+      throw "Timer is already running!";
+    }
+    isRunning = true;
     console.log("start");
-    this.duration++;
+    myTimer = window.setInterval(function() {
+      duration++;
+    }, 1000);
   };
 
   this.stop = function() {
+    if (!isRunning) {
+      throw "Timer already stopped.";
+    }
+    isRunning = false;
     console.log("stop");
     clearInterval(myTimer);
   };
 
   this.reset = function() {
+    isRunning = false;
     console.log("reset");
     clearInterval(myTimer);
-    this.duration = 0;
+    duration = 0;
   };
 
-  // Object.defineProperty(this, "duration", {
-  //   get: function() {
-  //     return duration;
-  //   }
-  // });
+  Object.defineProperty(this, "duration", {
+    get: function() {
+      return duration;
+    }
+  });
 }
 
 const sw = new Stopwatch();
