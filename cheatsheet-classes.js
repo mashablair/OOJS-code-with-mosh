@@ -43,6 +43,15 @@ class Rectangle {
     draw() {
         console.log('Rectangle with width' + _width.get(this));
     }
+	
+	get width() {
+		return _width.get(this);
+	}
+	
+	set width(value) {
+		if (value <= 0) throw "Invalid width value";
+		_width.set(this, value);
+	}
 }
 
 // WeakMaps give us better protection than symbols. There is no way 

@@ -1,37 +1,67 @@
+const _array = new WeakMap();
+
 class Stack {
-  constructor() {
-    this.array = [];
-    this.count = this.array.length;
+  constructor(array) {
+    _array.set(this, []);
   }
 
   showStackInfo() {
-    console.log(this.array);
-    console.log(`The count is ${this.count}`);
+    const items = _array.get(this);
+    console.log(items);
+    console.log(`The count is ${items.length}`);
   }
 
   push(item) {
-    this.array.push(item);
-    this.count++;
+    _array.get(this).push(item);
+    // this.count++;
     this.showStackInfo();
   }
 
   pop() {
-    if (this.count === 0) {
-      throw "The stack is already empty";
-    }
-    this.array.pop();
-    this.count--;
-    this.showStackInfo();
+    const items = _array.get(this);
+    if (items.length === 0) throw "The stack is already empty";
+    return items.pop();
   }
 
   peek() {
-    if (this.count === 0) {
-      throw "No item in the stack";
-    }
-    let lastItem = this.array[this.count - 1];
-    console.log(lastItem);
+    const items = _array.get(this);
+    if (items.length === 0) throw "No item in the stack";
+    return items[items.length - 1];
+  }
+
+  get count() {
+    return _array.get(this).length;
+  }
+  // to call it: stack.count (as a property, not method)
+}
+
+const stack = new Stack();
+stack.showStackInfo();
+
+//
+//
+//
+// Another exercise
+const _width = new WeakMap();
+class Rectangle {
+  constructor(width) {
+    _width.set(this, width);
+  }
+
+  draw() {
+    console.log("Rectangle with width" + _width.get(this));
+  }
+
+  get width() {
+    return _width.get(this);
+  }
+
+  // although I don't undestand why do it this way
+  // since this makes 'width' a public prop that can be reset from outside now
+  set width(value) {
+    if (value <= 0) throw "Invalid width value";
+    _width.set(this, value);
   }
 }
 
-const stack = new Stack("Masha");
-stack.showStackInfo();
+const r = new Rectangle(4);
